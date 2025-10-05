@@ -3,10 +3,10 @@
 // En esta sección se ensamblan los componentes y se procesan los datos para mostrarlos en pantalla.
 
 // Incluir las funciones esenciales; si el archivo no existe se detiene la ejecución para evitar errores.
-require_once __DIR__ . '/secciones/funciones.php';
+require 'secciones/funciones.php';
 
-// Incluir el array de datos; utilizamos require_once para garantizar que el script no continúe sin la información.
-require_once __DIR__ . '/secciones/datos.php';
+// Incluir el array de datos; utilizamos require para garantizar que el script no continúe sin la información.
+require 'secciones/datos.php';
 
 // Cálculo inicial de la cantidad de viajes para mostrar en el título descriptivo.
 $cantidadViajes = count($viajes);
@@ -17,10 +17,10 @@ $contadorMenores300 = 0;
 $sumaTotalViajes = 0;
 
 // Incluir el encabezado visual. En caso de faltar el archivo, solo se generará un aviso pero la ejecución continúa.
-include_once __DIR__ . '/secciones/encabezado.php';
+include 'secciones/encabezado.php';
 
-// Incluir el menú lateral con navegación. También se utiliza include_once para manejar posibles advertencias sin detener todo.
-include_once __DIR__ . '/secciones/menu_lateral.php';
+// Incluir el menú lateral con navegación. También se utiliza include para manejar posibles advertencias sin detener todo.
+include 'secciones/menu_lateral.php';
 ?>
         <!-- Panel principal donde se ubica el contenido dinámico -->
         <div class="main-panel">
@@ -50,8 +50,10 @@ include_once __DIR__ . '/secciones/menu_lateral.php';
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($viajes as $indice => $viaje): ?>
+                                            <?php for ($i = 0; $i < $cantidadViajes; $i++) { ?>
                                                 <?php
+                                                // Recupero los datos del viaje actual para trabajar con variables simples.
+                                                $viaje = $viajes[$i];
                                                 // Formatear la fecha para mostrarla en formato español.
                                                 $fechaFormateada = formatearFecha($viaje['fecha']);
                                                 // Determinar la clase de color según el estado del viaje.
@@ -70,21 +72,21 @@ include_once __DIR__ . '/secciones/menu_lateral.php';
                                                 $totalViaje = calcularTotalViaje($viaje['precio_base'], $costoPeajes);
 
                                                 // Actualizar la sumatoria de viajes finalizados si corresponde.
-                                                if (strtolower($viaje['estado']) === 'finalizado') {
-                                                    $sumatoriaFinalizados += $totalViaje;
+                                                if (strtolower($viaje['estado']) == 'finalizado') {
+                                                    $sumatoriaFinalizados = $sumatoriaFinalizados + $totalViaje;
                                                 }
 
                                                 // Incrementar el contador de viajes con total menor a $300.000.
                                                 if ($totalViaje < 300000) {
-                                                    $contadorMenores300++;
+                                                    $contadorMenores300 = $contadorMenores300 + 1;
                                                 }
 
                                                 // Acumular el total general de todos los viajes.
-                                                $sumaTotalViajes += $totalViaje;
+                                                $sumaTotalViajes = $sumaTotalViajes + $totalViaje;
                                                 ?>
                                                 <tr>
                                                     <!-- Número de fila -->
-                                                    <td><?php echo $indice + 1; ?></td>
+                                                    <td><?php echo ($i + 1); ?></td>
                                                     <td>
                                                         <!-- Fecha con el color correspondiente según el estado -->
                                                         <p class="text-<?php echo $claseEstado; ?>">
@@ -105,11 +107,7 @@ include_once __DIR__ . '/secciones/menu_lateral.php';
                                                         <br />
                                                         <!-- Barra de progreso que refleja la ocupación -->
                                                         <div class="progress">
-                                                            <div class="progress-bar bg-<?php echo $clasePeso; ?>" role="progressbar"
-                                                                style="width: <?php echo $porcentajeOcupacion; ?>%"
-                                                                aria-valuenow="<?php echo $porcentajeOcupacion; ?>"
-                                                                aria-valuemin="0"
-                                                                aria-valuemax="100"></div>
+                                                            <div class="progress-bar bg-<?php echo $clasePeso; ?>" role="progressbar" style="width: <?php echo $porcentajeOcupacion; ?>%" aria-valuenow="<?php echo $porcentajeOcupacion; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                                                         </div>
                                                     </td>
                                                     <!-- Costo de peajes con detalle en el título -->
@@ -118,7 +116,8 @@ include_once __DIR__ . '/secciones/menu_lateral.php';
                                                     <!-- Total calculado del viaje -->
                                                     <td><?php echo formatearMoneda($totalViaje); ?></td>
                                                 </tr>
-                                            <?php endforeach; ?>
+                                            <?php }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -194,5 +193,5 @@ include_once __DIR__ . '/secciones/menu_lateral.php';
             </div>
 <?php
 // Incluir el pie del documento para cerrar la estructura HTML.
-include_once __DIR__ . '/secciones/pie.php';
+include 'secciones/pie.php';
 ?>
